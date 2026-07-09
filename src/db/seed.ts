@@ -69,7 +69,7 @@ async function seed() {
   const posts = [
     {
       id: crypto.randomUUID(),
-      title: "Welcome to RedditClone!",
+      title: "Welcome to Ryde!",
       body: "This is the front page of your clone. Feel free to explore, create communities, and start posting. This platform is built with Next.js, Drizzle ORM, and SQLite.",
       type: "text" as const,
       authorId: users[0].id,

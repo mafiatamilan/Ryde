@@ -14,8 +14,8 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "RedditClone - The front page of your clone",
-  description: "A community-driven link and discussion platform",
+  title: "Ryde",
+  description: "Ryde - The front page",
 };
 
 export default function RootLayout({

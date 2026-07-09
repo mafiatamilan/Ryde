@@ -41,7 +41,7 @@ export function SidebarClient({
           <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center">
             <span className="text-white font-bold text-sm">R</span>
           </div>
-          <span className="font-bold text-lg text-zinc-100">RedditClone</span>
+          <span className="font-bold text-lg text-zinc-100">Ryde</span>
         </Link>
       </div>
 

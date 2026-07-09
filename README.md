@@ -1,6 +1,6 @@
-# RedditClone
+# Ryde
 
-A full-featured Reddit clone built with Next.js 16, Drizzle ORM, SQLite, and NextAuth.js.
+A full-featured Ryde clone built with Next.js 16, Drizzle ORM, SQLite, and NextAuth.js.
 
 ## Features
 
@@ -40,7 +40,7 @@ A full-featured Reddit clone built with Next.js 16, Drizzle ORM, SQLite, and Nex
 
 ```bash
 git clone <repo-url>
-cd reddit_clone
+cd ryde
 npm install
 ```
 
