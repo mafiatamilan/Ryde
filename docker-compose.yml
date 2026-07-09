@@ -1,0 +1,17 @@
+services:
+  ryde:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:./data/ryde.db
+      - AUTH_SECRET=${AUTH_SECRET:-change-me-in-production}
+      - AUTH_URL=http://localhost:3000
+    volumes:
+      - ryde-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  ryde-data:
