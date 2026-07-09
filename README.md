@@ -1,36 +1,157 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RedditClone
+
+A full-featured Reddit clone built with Next.js 16, Drizzle ORM, SQLite, and NextAuth.js.
+
+## Features
+
+- **Auth** — Email/password registration & login with NextAuth.js, JWT sessions
+- **Communities** — Create, browse, and join/leave communities (public/restricted/private)
+- **Posts** — Text, link, and image posts with voting
+- **Comments** — Threaded, infinitely-nested comments with collapse/expand and per-depth colored borders
+- **Voting** — Upvote/downvote on posts and comments with real-time score updates
+- **Feeds** — Home, Popular, All, Trending with Hot/New/Top/Rising/Controversial sorting
+- **Search** — Global search across posts, communities, and users
+- **Profiles** — User profiles with post/comment history and karma breakdown
+- **Mobile** — Bottom navigation bar on small screens with responsive layout
+- **Dark Mode** — Dark-mode-first design with indigo accent color
+- **Toasts** — Notification toast system for actions
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript (strict mode) |
+| Styling | Tailwind CSS v4, shadcn/ui components |
+| Database | SQLite via Drizzle ORM + better-sqlite3 |
+| Auth | NextAuth.js v5 (Auth.js) with credentials provider |
+| Forms | Zod validation |
+| Icons | Lucide React |
+| Fonts | Inter + Plus Jakarta Sans |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20.9+
+- npm
+
+### Installation
+
+```bash
+git clone <repo-url>
+cd reddit_clone
+npm install
+```
+
+### Environment Variables
+
+Create a `.env` file (already provided for dev):
+
+```env
+DATABASE_URL="file:./dev.db"
+AUTH_SECRET="your-secret-key-change-in-production"
+AUTH_URL="http://localhost:3000"
+```
+
+### Database Setup
+
+```bash
+# Generate and apply migrations
+npm run db:generate
+npm run db:migrate
+
+# Seed with sample data
+npm run db:seed
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Sample Accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+After seeding:
 
-## Learn More
+| Username | Email | Password |
+|----------|-------|----------|
+| admin | admin@example.com | password123 |
+| alice | alice@example.com | password123 |
+| bob | bob@example.com | password123 |
+| charlie | charlie@example.com | password123 |
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/
+│   ├── (main)/          # Main app layout with sidebar + topnav
+│   │   ├── page.tsx          # Home feed
+│   │   ├── all/page.tsx      # All posts feed
+│   │   ├── popular/page.tsx  # Popular feed
+│   │   ├── trending/page.tsx # Trending feed
+│   │   ├── search/page.tsx   # Search results
+│   │   ├── submit/page.tsx   # Create post
+│   │   ├── post/[id]/        # Post detail + comments
+│   │   ├── r/[slug]/         # Community page
+│   │   └── u/[username]/     # User profile
+│   ├── login/page.tsx        # Login page
+│   ├── register/page.tsx     # Registration page
+│   └── api/                  # API routes
+├── components/
+│   ├── ui/                   # shadcn-style UI primitives
+│   └── layout/               # Sidebar, TopNav, BottomNav
+├── db/
+│   ├── index.ts              # Database connection
+│   ├── schema/
+│   │   ├── auth.ts           # Auth.js tables
+│   │   └── index.ts          # All application tables
+│   └── seed.ts               # Seed script
+└── lib/
+    ├── auth.ts               # NextAuth configuration
+    └── utils.ts              # Utility functions
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Database Schema
 
-## Deploy on Vercel
+- **user** — User accounts with karma, bio, and auth fields
+- **account / session / verificationToken** — NextAuth.js tables
+- **community** — Subreddits with type (public/restricted/private), rules, flairs
+- **membership** — User-community join table with role (member/moderator/admin)
+- **post** — Posts with type (text/link/image/video/poll), score, flags
+- **comment** — Nested comments with depth tracking and soft delete
+- **vote** — User vote on posts/comments (+1/-1)
+- **notification** — User notifications (reply, mention, upvote, award, mod action)
+- **savedItem** — Saved/bookmarked posts and comments
+- **award** — Gold/silver/custom awards on posts/comments
+- **report** — Content reports with moderation status
+- **modAction** — Moderator action log
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Routes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Route | Method | Description |
+|-------|--------|-------------|
+| `/api/auth/*` | GET/POST | Auth.js handlers |
+| `/api/auth/register` | POST | User registration |
+| `/api/communities` | GET/POST | List/create communities |
+| `/api/communities/[slug]` | GET/DELETE | Get/delete community |
+| `/api/communities/[slug]/join` | POST/DELETE | Join/leave community |
+| `/api/posts` | GET/POST | List/create posts (supports sort params) |
+| `/api/posts/[id]` | GET | Get post with comments |
+| `/api/votes` | POST | Cast vote on post/comment |
+| `/api/comments` | POST/DELETE | Create/delete comment |
+| `/api/search` | GET | Search posts, communities, users |
+
+## Scripts
+
+- `npm run dev` — Start development server
+- `npm run build` — Production build
+- `npm run db:generate` — Generate Drizzle migrations
+- `npm run db:migrate` — Apply migrations
+- `npm run db:push` — Push schema changes directly
+- `npm run db:seed` — Seed database with sample data
+- `npm run db:studio` — Launch Drizzle Studio
